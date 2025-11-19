@@ -243,6 +243,8 @@ spec:
           networkAttachment: internalapi
       ovnController:
         networkAttachment: tenant
+        nicMappings:
+          octavia: octbr
   placement:
     apiOverride:
       route: {}
@@ -331,6 +333,8 @@ spec:
     template:
       metricStorage:
         enabled: false
+        networkAttachments:
+        - ctlplane
         monitoringStack:
           alertingEnabled: true
           scrapeInterval: 30s
@@ -385,12 +389,22 @@ spec:
         networkAttachments:
         - storage
   octavia:
-    enabled: false
+    enabled: true
     template:
+      amphoraImageContainerImage: registry.redhat.io/rhoso/octavia-amphora-image-rhel9@sha256:312cd5e8ea9fe261c1929aefececbeb22afe5e433ae76ef0860d98e561db21c9
       databaseInstance: openstack
       octaviaAPI:
         replicas: 1
       secret: osp-secret
+      octaviaHousekeeping:
+        networkAttachments:
+          - octavia
+      octaviaHealthManager:
+        networkAttachments:
+          - octavia
+      octaviaWorker:
+        networkAttachments:
+          - octavia
   redis:
     enabled: false
   designate:
